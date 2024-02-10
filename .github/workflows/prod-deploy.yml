@@ -13,6 +13,16 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
+      - name: Replace secrets
+        run: |
+          sed -i 's/db-name/${{ secrets.DB_NAME }}/g' docker-compose.yml
+          sed -i 's/db-username/${{ secrets.DB_USER }}/g' docker-compose.yml
+          sed -i 's/db-password/${{ secrets.DB_PASSWORD }}/g' docker-compose.yml
+          sed -i 's/db-host/${{ secrets.DB_HOST }}/g' Neverminder/appsettings.json
+          sed -i 's/db-name/${{ secrets.DB_NAME }}/g' Neverminder/appsettings.json
+          sed -i 's/db-username/${{ secrets.DB_USER }}/g' Neverminder/appsettings.json
+          sed -i 's/db-password/${{ secrets.DB_PASSWORD }}/g' Neverminder/appsettings.json
+
       - name: Login to DockerHub
         uses: docker/login-action@v1
         with:
@@ -25,6 +35,18 @@ jobs:
           docker tag ${{ secrets.DOCKER_IMAGE_NAME }} ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_IMAGE_NAME }}:latest
           docker push ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_IMAGE_NAME }}:latest
 
+      - name: Transfer docker-compose.yml to Droplet
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.DROPLET_IP }}
+          username: ${{ secrets.DROPLET_USERNAME }}
+          port: 22
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          passphrase: ${{ secrets.PASSPHRASE }}
+          source: docker-compose.yml
+          target: ${{ secrets.DROPPLET_FOLDER_PATH }}
+          overwrite: true
+
       - name: SSH into DigitalOcean Droplet
         uses: appleboy/ssh-action@master
         with:
@@ -36,6 +58,4 @@ jobs:
             cd ${{ secrets.DROPPLET_FOLDER_PATH }}
             docker login --username ${{ secrets.DOCKER_USERNAME }} --password '${{ secrets.DOCKER_PASSWORD }}'
             docker pull ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_IMAGE_NAME }}:latest
-            docker stop neverminder
-            docker rm neverminder
-            docker run -d -p 8080:80 --name neverminder ${{ secrets.DOCKER_USERNAME }}/neverminder
+            docker compose up -d
