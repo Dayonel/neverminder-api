@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
@@ -24,6 +24,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Neverminder.Data\Neverminder.Data.csproj" />
+    <ProjectReference Include="..\Neverminder.Infrastructure.Firebase\Neverminder.Infrastructure.Firebase.csproj" />
   </ItemGroup>
 
 </Project>

@@ -9,6 +9,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Neverminder.Data", "Nevermi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Neverminder.Core", "Neverminder.Core\Neverminder.Core.csproj", "{A55980F4-BFB4-48CE-AB5B-BAFC7C71B1C7}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastructure", "{39E74B50-FF60-468C-B597-19720815D3BF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Neverminder.Infrastructure.Firebase", "Neverminder.Infrastructure.Firebase\Neverminder.Infrastructure.Firebase.csproj", "{B6DA2FB1-082C-456F-B8E2-89F22F9A92DF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,9 +31,16 @@ Global
 		{A55980F4-BFB4-48CE-AB5B-BAFC7C71B1C7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A55980F4-BFB4-48CE-AB5B-BAFC7C71B1C7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A55980F4-BFB4-48CE-AB5B-BAFC7C71B1C7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B6DA2FB1-082C-456F-B8E2-89F22F9A92DF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B6DA2FB1-082C-456F-B8E2-89F22F9A92DF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B6DA2FB1-082C-456F-B8E2-89F22F9A92DF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B6DA2FB1-082C-456F-B8E2-89F22F9A92DF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{B6DA2FB1-082C-456F-B8E2-89F22F9A92DF} = {39E74B50-FF60-468C-B597-19720815D3BF}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {13E187B7-70C6-4D25-8701-897D46701167}

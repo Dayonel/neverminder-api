@@ -9,11 +9,12 @@ builder.Services.AddSwaggerGen(options =>
 {
     options.SwaggerDoc("v1", new OpenApiInfo
     {
-        Version = "v1.0.2",
+        Version = "v1.0.3",
         Title = "Neverminder API",
         Description = "Reminders app that sends notifications for your plans.",
     });
 });
+builder.Services.AddRouting(o => o.LowercaseUrls = true);
 
 // DI
 builder.Services.AddDependencies(builder.Configuration);
