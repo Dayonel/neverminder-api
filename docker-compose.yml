@@ -1,3 +1,5 @@
+version: '3'
+
 services:
   api:
     image: dayonel/neverminder
@@ -35,12 +37,21 @@ services:
     container_name: nginx-reverse-proxy
     ports:
       - "80:80"
+      - "443:443"
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf
-    depends_on:
-      - api
+      - ./certbot/conf:/etc/letsencrypt
+      - ./certbot/www:/var/www/certbot
     networks:
       - bridge_network
+
+  certbot:
+    image: certbot/certbot
+    container_name: certbot
+    volumes:
+      - ./certbot/conf:/etc/letsencrypt
+      - ./certbot/www:/var/www/certbot
+    command: certonly --webroot -w /var/www/certbot --force-renewal --email dayonel@hotmail.es -d neverminder.me -d www.neverminder.me -d api.neverminder.me --agree-tos
 
 networks:
   bridge_network:
