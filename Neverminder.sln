@@ -3,7 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.8.34322.80
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Neverminder", "Neverminder\Neverminder.csproj", "{7F20AF56-EC1F-459A-A6AE-2BF9161E59B3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Neverminder", "Neverminder\Neverminder.csproj", "{7F20AF56-EC1F-459A-A6AE-2BF9161E59B3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Neverminder.Data", "Neverminder.Data\Neverminder.Data.csproj", "{A6168340-F7EA-4D61-BABF-42258021BDA0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Neverminder.Core", "Neverminder.Core\Neverminder.Core.csproj", "{A55980F4-BFB4-48CE-AB5B-BAFC7C71B1C7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +19,14 @@ Global
 		{7F20AF56-EC1F-459A-A6AE-2BF9161E59B3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7F20AF56-EC1F-459A-A6AE-2BF9161E59B3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7F20AF56-EC1F-459A-A6AE-2BF9161E59B3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A6168340-F7EA-4D61-BABF-42258021BDA0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A6168340-F7EA-4D61-BABF-42258021BDA0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A6168340-F7EA-4D61-BABF-42258021BDA0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A6168340-F7EA-4D61-BABF-42258021BDA0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A55980F4-BFB4-48CE-AB5B-BAFC7C71B1C7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A55980F4-BFB4-48CE-AB5B-BAFC7C71B1C7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A55980F4-BFB4-48CE-AB5B-BAFC7C71B1C7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A55980F4-BFB4-48CE-AB5B-BAFC7C71B1C7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
