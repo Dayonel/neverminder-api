@@ -339,3 +339,4 @@ ASALocalRun/
 # BeatPulse healthcheck temp database
 healthchecksdb
 /Neverminder/appsettings.Development.json
+/Neverminder/neverminder-me-firebase-adminsdk-pq10q-ab46b52acc.json
