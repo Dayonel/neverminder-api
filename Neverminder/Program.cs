@@ -1,5 +1,7 @@
+using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using Neverminder.DI;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,6 +20,18 @@ builder.Services.AddRouting(o => o.LowercaseUrls = true);
 
 // DI
 builder.Services.AddDependencies(builder.Configuration);
+
+// Add logging
+if (!builder.Environment.IsDevelopment())
+{
+    var log = new LoggerConfiguration()
+        .WriteTo.Console()
+        .WriteTo.File("logs/neverminderapi-.txt", rollingInterval: RollingInterval.Day)
+        .MinimumLevel.Warning()
+        .CreateLogger();
+
+    builder.Host.UseSerilog(log);
+}
 
 var app = builder.Build();
 app.UseSwagger();
