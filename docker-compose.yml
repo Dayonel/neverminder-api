@@ -6,20 +6,10 @@ services:
     container_name: neverminder-api
     expose:
       - "5000"
-    depends_on:
-      db:
-        condition: service_healthy
     networks:
       - bridge_network
-
-  db:
-    image: sqlite
-    container_name: sqlite-db
-    restart: always
     volumes:
       - db-data:/var/lib/sqlite
-    networks:
-      - bridge_network
 
   nginx:
     image: nginx
