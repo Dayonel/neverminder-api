@@ -13,24 +13,13 @@ services:
       - bridge_network
 
   db:
-    image: postgres
-    container_name: postgres-db
+    image: sqlite
+    container_name: sqlite-db
     restart: always
-    ports:
-      - "5432:5432"
-    environment:
-      POSTGRES_DB: db-name
-      POSTGRES_USER: db-username
-      POSTGRES_PASSWORD: db-password
     volumes:
-      - db-data:/var/lib/postgresql/data
+      - db-data:/var/lib/sqlite
     networks:
       - bridge_network
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -d db-name -U db-username"]
-      interval: 1s
-      timeout: 5s
-      retries: 10
 
   nginx:
     image: nginx

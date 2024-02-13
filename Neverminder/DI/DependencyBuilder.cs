@@ -21,7 +21,7 @@ namespace Neverminder.DI
             #endregion
 
             #region DB
-            services.AddDbContext<NeverminderDbContext>(options => options.UseNpgsql(configuration.GetConnectionString("DbContext")));
+            services.AddDbContext<NeverminderDbContext>(options => options.UseSqlite(configuration.GetConnectionString("DbContext")));
             #endregion
 
             #region Services

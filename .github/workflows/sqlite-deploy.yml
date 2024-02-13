@@ -1,0 +1,54 @@
+name: Deploy to DigitalOcean
+
+on:
+  push:
+    branches:
+      - sqlite
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Replace secrets
+        run: |
+          echo '${{ secrets.FIREBASE_CREDENTIALS }}' > Neverminder/neverminder-me-firebase-adminsdk-pq10q-ab46b52acc.json
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build and push Docker image
+        run: |
+          docker build -t ${{ secrets.DOCKER_IMAGE_NAME }} -f Neverminder/Dockerfile .
+          docker tag ${{ secrets.DOCKER_IMAGE_NAME }} ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_IMAGE_NAME }}:latest
+          docker push ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_IMAGE_NAME }}:latest
+
+      - name: Transfer files to Droplet
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.SQLITE_DROPLET_IP }}
+          username: ${{ secrets.DROPLET_USERNAME }}
+          password: ${{ secrets.SQLITE_DROPPLET_PASSWORD }}
+          port: 22
+          source: "docker-compose.yml,nginx.conf"
+          target: ${{ secrets.DROPPLET_FOLDER_PATH }}
+          overwrite: true
+
+      - name: SSH into DigitalOcean Droplet
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SQLITE_DROPLET_IP }}
+          username: ${{ secrets.DROPLET_USERNAME }}
+          password: ${{ secrets.SQLITE_DROPPLET_PASSWORD }}
+          script: |
+            cd ${{ secrets.DROPPLET_FOLDER_PATH }}
+            docker login --username ${{ secrets.DOCKER_USERNAME }} --password '${{ secrets.DOCKER_PASSWORD }}'
+            docker rmi $(docker images '${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_IMAGE_NAME }}' -a -q)
+            docker pull ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_IMAGE_NAME }}:latest
+            docker compose up -d
