@@ -8,6 +8,7 @@ namespace Neverminder.Data
     public sealed class NeverminderDbContext : IdentityDbContext<IdentityUser>
     {
         public DbSet<Platform> Platforms { get; set; }
+        public DbSet<Reminder> Reminders { get; set; }
 
         public NeverminderDbContext(DbContextOptions options) : base(options) { }
     }
