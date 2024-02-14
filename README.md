@@ -72,3 +72,19 @@ Create a file `appsettings.development.json` in the api project root and replace
 
 ## Setup
 Follow the commits of the `setup` branch for a detailed step by step.
+
+## SQLite (optional)
+Copy file to container
+```
+docker cp neverminder.db neverminder-api:/tmp/neverminder.db
+```
+
+Move file to a volume
+```
+docker exec -it neverminder-api mv /tmp/neverminder.db /var/lib/sqlite/db-file.db
+```
+
+Follow the commits of the `sqlite` branch for a detailed step by step.
+
+## SQLite migrations (optional)
+`Statup.cs` file will apply all pending migrations by this instruction `db.Database.Migrate()`

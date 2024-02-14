@@ -1,5 +1,6 @@
-using Microsoft.Extensions.Logging;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
+using Neverminder.Data;
 using Neverminder.DI;
 using Serilog;
 
@@ -34,6 +35,14 @@ if (!builder.Environment.IsDevelopment())
 }
 
 var app = builder.Build();
+
+// DB migrations
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<NeverminderDbContext>();
+    db.Database.Migrate();
+}
+
 app.UseSwagger();
 app.UseSwaggerUI();
 
