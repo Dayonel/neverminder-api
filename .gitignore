@@ -340,3 +340,6 @@ ASALocalRun/
 healthchecksdb
 /Neverminder/appsettings.Development.json
 /Neverminder/neverminder-me-firebase-adminsdk-pq10q-ab46b52acc.json
+neverminder.db
+neverminder.db-shm
+neverminder.db-wal

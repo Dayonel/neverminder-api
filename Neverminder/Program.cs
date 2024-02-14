@@ -41,6 +41,7 @@ using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<NeverminderDbContext>();
     db.Database.Migrate();
+    db.Database.ExecuteSqlRaw("PRAGMA wal_checkpoint;"); // performs a checkpoint operation transferring the committed changes
 }
 
 app.UseSwagger();

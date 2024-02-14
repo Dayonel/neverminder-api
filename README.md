@@ -88,3 +88,15 @@ Follow the commits of the `sqlite` branch for a detailed step by step.
 
 ## SQLite migrations (optional)
 `Statup.cs` file will apply all pending migrations by this instruction `db.Database.Migrate()`
+
+## Copy file from inside a container volume
+Copy file from container volume
+```
+docker cp neverminder-api:/var/lib/sqlite/db-file.db /neverminder-api
+```
+
+## Copy logs folder from inside a container
+Copy all logs
+```
+docker cp neverminder-api:/app/logs /neverminder-api
+```
