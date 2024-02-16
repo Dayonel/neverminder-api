@@ -41,7 +41,9 @@ using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<NeverminderDbContext>();
     db.Database.Migrate();
-    db.Database.ExecuteSqlRaw("PRAGMA wal_checkpoint;"); // performs a checkpoint operation transferring the committed changes
+    db.Database.ExecuteSqlRaw("PRAGMA busy_timeout = 5000;"); // litestream busy timeout
+    db.Database.ExecuteSqlRaw("PRAGMA synchronous = NORMAL;"); // litestream synchronous PRAGMA
+    db.Database.ExecuteSqlRaw("PRAGMA wal_autocheckpoint = 0;"); // litestream disable autocheckpoints
 }
 
 app.UseSwagger();

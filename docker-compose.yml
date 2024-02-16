@@ -34,6 +34,16 @@ services:
       - ./certbot/www:/var/www/certbot
     command: ${CERTBOT_COMMAND}
 
+  litestream:
+    image: litestream/litestream
+    container_name: litestream
+    command: ["replicate", "-config", "litestream/litestream-config.yml"]
+    volumes:
+      - ./litestream:/litestream
+      - db-data:/var/lib/sqlite
+    depends_on:
+      - api
+
 networks:
   bridge_network:
     driver: bridge

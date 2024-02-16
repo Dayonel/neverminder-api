@@ -38,10 +38,6 @@ Check that your DNS is propagated [dnschecker](https://dnschecker.org/)
 
 ## Github secrets
 Configure your project secrets, you will need at least these
-> DB_HOST\
-> DB_NAME\
-> DB_PASSWORD\
-> DB_USER\
 > DOCKER_IMAGE_NAME\
 > DOCKER_PASSWORD\
 > DOCKER_USERNAME\
@@ -50,11 +46,19 @@ Configure your project secrets, you will need at least these
 > DROPPLET_FOLDER_PATH\
 > FIREBASE_CREDENTIALS\
 > PASSPHRASE\
-> SSH_PRIVATE_KEY
+> SSH_PRIVATE_KEY\
+> LITESTREAM_KEY_ID\
+> LITESTREAM_SECRET\
+> S3_REPLICAS_HOSTNAME
 
 ## Let's encrypt
-Configure your https certificate using let's encrypt.
+Copy a simple nginx.conf configuration from commit `663897e3e1bf26e950a5ae5f7587531e8fc5fe41`.
+
+Request your first https certificate using let's encrypt.
 Replace `--email` by your email and `-d` by your domain.
+```
+CERTBOT_COMMAND="certonly --webroot -w /var/www/certbot --force-renewal --email your_email -d your_domain.com -d www.your_domain.com -d api.your_domain.com --agree-tos" /usr/bin/docker compose -f /neverminder-api/docker-compose.yml up certbot
+```
 
 ## Auto renew
 Configure your `cron` job to auto renew your ssl certificate.
@@ -64,35 +68,45 @@ crontab -e
 
 Replace `--email` by your email and `-d` by your domain.
 ```
-0 5 1 */2 * CERTBOT_COMMAND="certonly --webroot -w /var/www/certbot --force-renewal --email your_email  -d your_domain.com -d www.your_domain.com -d api.your_domain.com --agree-tos" /usr/bin/docker compose -f /neverminder-api/docker-compose.yml up certbot
+0 5 1 */2 * CERTBOT_COMMAND="certonly --webroot -w /var/www/certbot --force-renewal --email your_email -d your_domain.com -d www.your_domain.com -d api.your_domain.com --agree-tos" /usr/bin/docker compose -f /neverminder-api/docker-compose.yml up certbot
 ```
 
 ## Database
-Create a file `appsettings.development.json` in the api project root and replace your connection string `DbContext` with your credentials.
+`Statup.cs` file will apply all pending migrations by this instruction `db.Database.Migrate()`.\
+A database is automatically created if none exist.
 
-## Setup
-Follow the commits of the `setup` branch for a detailed step by step.
-
-## SQLite (optional)
-Copy file to container
+Create a file `appsettings.development.json` in the api project root with a local connection string.
 ```
-docker cp neverminder.db neverminder-api:/tmp/neverminder.db
-```
-
-Move file to a volume
-```
-docker exec -it neverminder-api mv /tmp/neverminder.db /var/lib/sqlite/db-file.db
+"ConnectionStrings": {
+  "DbContext": "DataSource=neverminder.db"
+}
 ```
 
-Follow the commits of the `sqlite` branch for a detailed step by step.
-
-## SQLite migrations (optional)
-`Statup.cs` file will apply all pending migrations by this instruction `db.Database.Migrate()`
-
-## Copy file from inside a container volume
-Copy file from container volume
+In production, file `appsettings.json` is used and a volume is mounted, path has to match `docker-compose.yml`
 ```
-docker cp neverminder-api:/var/lib/sqlite/db-file.db /neverminder-api
+"ConnectionStrings": {
+  "DbContext": "DataSource=/var/lib/sqlite/db-file.db"
+}
+```
+
+## SQLite
+Journaling mode is set to [WAL](https://www.sqlite.org/wal.html), is significantly faster in most scenarios.\
+Database consists of up to 3 files:
+> Database file `.db`\
+> WAL file `.db-wal`\
+> Shared memory file `.db-shm`
+
+## Litestream
+Database is replicated using [Litestream](https://litestream.io/) to a S3-compatible storage.\
+Litestream only works with the SQLite `WAL` journaling mode.\
+Litestream requires periodic write locks, we handle this scenario using `PRAGMA busy_timeout = 5000;`\
+Checkpoints to the main database are set to `PRAGMA synchronous = NORMAL;`, this setting is a good choice for most applications running in WAL mode.\
+Litestream control checkpoints maintaining a read lock on the database due to this instruction `PRAGMA wal_autocheckpoint = 0;`
+
+## Copy database from inside a container
+Copy database: *up to 3 files*
+```
+docker cp neverminder-api:/var/lib/sqlite /neverminder-api
 ```
 
 ## Copy logs folder from inside a container
@@ -100,3 +114,6 @@ Copy all logs
 ```
 docker cp neverminder-api:/app/logs /neverminder-api
 ```
+
+## Setup
+Follow the commits of the `setup` branch for a detailed step by step.

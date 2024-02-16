@@ -1,0 +1,6 @@
+dbs:
+  - path: /var/lib/sqlite/db-file.db
+    replicas:
+      - url: S3_REPLICAS_HOSTNAME
+        access-key-id: LITESTREAM_KEY_ID
+        secret-access-key: LITESTREAM_SECRET
