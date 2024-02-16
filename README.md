@@ -103,6 +103,41 @@ Litestream requires periodic write locks, we handle this scenario using `PRAGMA 
 Checkpoints to the main database are set to `PRAGMA synchronous = NORMAL;`, this setting is a good choice for most applications running in WAL mode.\
 Litestream control checkpoints maintaining a read lock on the database due to this instruction `PRAGMA wal_autocheckpoint = 0;`
 
+## Restore a db replica
+To restore your database, download litestream in your server/local machine
+```
+wget https://github.com/benbjohnson/litestream/releases/download/v0.3.13/litestream-v0.3.13-linux-amd64.deb
+```
+
+Then install it using dpkg:
+```
+sudo dpkg -i litestream-v0.3.13-linux-amd64.deb
+```
+
+Next, set environment variables
+```
+export LITESTREAM_ACCESS_KEY_ID=YOUR_ID
+```
+```
+export LITESTREAM_SECRET_ACCESS_KEY=YOUR_SECRET
+```
+
+Clear console history
+```
+history -c
+```
+```
+clear
+```
+
+Restore now database
+```
+litestream restore -o neverminder.db s3://S3_REPLICAS_HOSTNAME/neverminder-db
+```
+
+## Access server via FTP
+If you are using windows you can access server files using [WinSCP](https://winscp.net/eng/download.php)
+
 ## Copy database from inside a container
 Copy database: *up to 3 files*
 ```
