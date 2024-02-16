@@ -150,5 +150,10 @@ Copy all logs
 docker cp neverminder-api:/app/logs /neverminder-api
 ```
 
+## Log a running Docker container
+> docker logs neverminder-api\
+> docker logs litestream\
+> docker logs nginx-reverse-proxy
+
 ## Setup
 Follow the commits of the `setup` branch for a detailed step by step.
