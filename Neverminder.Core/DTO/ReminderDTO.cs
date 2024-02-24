@@ -1,16 +1,15 @@
-﻿using Neverminder.Core.Entity.Base;
+﻿using System.ComponentModel.DataAnnotations;
 
-namespace Neverminder.Core.Entity
+namespace Neverminder.Core.DTO
 {
-    public class Reminder : EntityBase
+    public class ReminderDTO
     {
+        public int Id { get; set; }
+        [Required]
         public string Title { get; set; }
         public string Description { get; set; }
         public DateTime CreatedOn { get; set; }
         public DateTime AlertOn { get; set; }
         public bool Enabled { get; set; }
-
-        public virtual Platform Platform { get; set; }
-        public int PlatformId { get; set; }
     }
 }

@@ -11,7 +11,9 @@ namespace Neverminder.Core.Interfaces.Repositories.Base
         Task<T> Get(Expression<Func<T, bool>> predicate);
         Task<List<T>> List();
         Task<List<T>> List(Expression<Func<T, bool>> predicate);
+        Task<List<T>> ListPaged(int page, int pageSize);
         Task<int> AddAsync(T entity);
         Task<bool> DeleteAsync(int id);
+        Task<bool> UpdateAsync(T entity);
     }
 }

@@ -43,6 +43,14 @@ namespace Neverminder.Data.Repositories.Base
             return await _dbContext.Set<T>().Where(predicate).ToListAsync();
         }
 
+        public virtual async Task<List<T>> ListPaged(int page, int pageSize)
+        {
+            return await _dbContext.Set<T>()
+                .Skip(pageSize * (page - 1))
+                .Take(pageSize)
+                .ToListAsync();
+        }
+
         public async Task<int> AddAsync(T entity)
         {
             _dbContext.Set<T>().Add(entity);
@@ -61,6 +69,12 @@ namespace Neverminder.Data.Repositories.Base
                 return false;
 
             _dbContext.Set<T>().Remove(dbEntity);
+            return await _dbContext.SaveChangesAsync() > 0;
+        }
+
+        public async Task<bool> UpdateAsync(T entity)
+        {
+            _dbContext.Set<T>().Update(entity);
             return await _dbContext.SaveChangesAsync() > 0;
         }
     }

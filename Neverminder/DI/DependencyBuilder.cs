@@ -26,10 +26,12 @@ namespace Neverminder.DI
 
             #region Services
             services.AddTransient<IPlatformService, PlatformService>();
+            services.AddTransient<IReminderService, ReminderService>();
             #endregion
 
             #region Repositories
             services.AddTransient<IPlatformRepository, PlatformRepository>();
+            services.AddTransient<IReminderRepository, ReminderRepository>();
             #endregion
 
             #region ServiceClients

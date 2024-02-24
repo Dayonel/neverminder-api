@@ -5,5 +5,7 @@ namespace Neverminder.Core.Entity
     public class Platform : EntityBase
     {
         public string PushToken { get; set; }
+
+        public virtual List<Reminder> Reminders { get; set; }
     }
 }

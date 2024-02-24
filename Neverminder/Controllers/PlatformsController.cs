@@ -24,7 +24,7 @@ namespace Neverminder.Controllers
             {
                 return await _platformService.Post(pushToken)
                     ? Ok()
-                    : StatusCode(StatusCodes.Status400BadRequest);
+                    : BadRequest();
             }
             catch (Exception ex)
             {
