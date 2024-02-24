@@ -10,6 +10,8 @@ namespace Neverminder.Core.DTO
         public string Description { get; set; }
         public DateTime CreatedOn { get; set; }
         public DateTime AlertOn { get; set; }
+        public DateTime? SentAt { get; set; }
         public bool Enabled { get; set; }
+        public bool Sent { get; set; }
     }
 }

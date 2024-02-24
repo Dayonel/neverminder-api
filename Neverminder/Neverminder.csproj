@@ -25,6 +25,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Neverminder.Data\Neverminder.Data.csproj" />
+    <ProjectReference Include="..\Neverminder.Functions\Neverminder.Functions.csproj" />
     <ProjectReference Include="..\Neverminder.Infrastructure.Firebase\Neverminder.Infrastructure.Firebase.csproj" />
   </ItemGroup>
 

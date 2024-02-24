@@ -77,5 +77,11 @@ namespace Neverminder.Data.Repositories.Base
             _dbContext.Set<T>().Update(entity);
             return await _dbContext.SaveChangesAsync() > 0;
         }
+
+        public async Task<bool> UpdateRangeAsync(List<T> entities)
+        {
+            _dbContext.Set<T>().UpdateRange(entities);
+            return await _dbContext.SaveChangesAsync() > 0;
+        }
     }
 }

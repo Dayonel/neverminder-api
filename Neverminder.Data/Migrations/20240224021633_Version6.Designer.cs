@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Neverminder.Data;
 
@@ -10,9 +11,11 @@ using Neverminder.Data;
 namespace Neverminder.Data.Migrations
 {
     [DbContext(typeof(NeverminderDbContext))]
-    partial class NeverminderDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240224021633_Version6")]
+    partial class Version6
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.2");

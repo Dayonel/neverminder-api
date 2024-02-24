@@ -53,6 +53,11 @@ namespace Neverminder.Core.Services
                 return false;
             }
 
+            reminder.Title = model.Title;
+            reminder.Description = model.Description;
+            reminder.AlertOn = model.AlertOn;
+            reminder.Enabled = model.Enabled;
+
             return await _reminderRepository.UpdateAsync(reminder);
         }
 

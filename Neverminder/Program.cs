@@ -12,7 +12,7 @@ builder.Services.AddSwaggerGen(options =>
 {
     options.SwaggerDoc("v1", new OpenApiInfo
     {
-        Version = "v1.0.4",
+        Version = "v1.0.5",
         Title = "Neverminder API",
         Description = "Reminders app that sends notifications for your plans.",
     });

@@ -15,5 +15,6 @@ namespace Neverminder.Core.Interfaces.Repositories.Base
         Task<int> AddAsync(T entity);
         Task<bool> DeleteAsync(int id);
         Task<bool> UpdateAsync(T entity);
+        Task<bool> UpdateRangeAsync(List<T> entities);
     }
 }

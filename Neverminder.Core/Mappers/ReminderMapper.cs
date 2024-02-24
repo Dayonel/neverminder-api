@@ -12,7 +12,6 @@ namespace Neverminder.Core.Mappers
                 new Reminder
                 {
                     AlertOn = model.AlertOn,
-                    CreatedOn = model.CreatedOn,
                     Description = model.Description,
                     Enabled = model.Enabled,
                     Title = model.Title,
@@ -33,6 +32,8 @@ namespace Neverminder.Core.Mappers
                     Description = model.Description,
                     Enabled = model.Enabled,
                     Title = model.Title,
+                    Sent = model.Sent,
+                    SentAt = model.SentAt,
                 }
                 : null;
         }

@@ -7,7 +7,9 @@ using Neverminder.Core.Interfaces.Services;
 using Neverminder.Core.Services;
 using Neverminder.Data;
 using Neverminder.Data.Repositories;
+using Neverminder.Functions.Schedulers;
 using Neverminder.Infrastructure.Firebase;
+using Neverminder.Functions.Extensions;
 
 namespace Neverminder.DI
 {
@@ -37,6 +39,10 @@ namespace Neverminder.DI
             #region ServiceClients
             FirebaseApp.Create(new AppOptions { Credential = GoogleCredential.FromFile("neverminder-me-firebase-adminsdk-pq10q-ab46b52acc.json") });
             services.AddTransient<IFirebaseServiceClient, FirebaseServiceClient>();
+            #endregion
+
+            #region Functions
+            services.AddCronJob<PushNotificationScheduler>(c => c.CronExpression = @"* * * * *");
             #endregion
         }
     }
