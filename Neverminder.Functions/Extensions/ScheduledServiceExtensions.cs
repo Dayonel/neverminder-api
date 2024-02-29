@@ -1,4 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using NCrontab;
 using Neverminder.Functions.Cron;
 using Neverminder.Functions.Interfaces;
 
@@ -6,19 +8,18 @@ namespace Neverminder.Functions.Extensions
 {
     public static class ScheduledServiceExtensions
     {
-        public static void AddCronJob<T>(this IServiceCollection services, Action<IScheduleConfig<T>> options) where T : CronJobService
+        public static IServiceCollection AddCronJob<T>(this IServiceCollection services, string cronExpression) where T : class, ICronJob
         {
-            if (options == null)
-                throw new ArgumentNullException(nameof(options), @"Please provide Schedule Configurations.");
+            var cron = CrontabSchedule.TryParse(cronExpression)
+                       ?? throw new ArgumentException("Invalid cron expression", nameof(cronExpression));
 
-            var config = new ScheduleConfig<T>();
-            options.Invoke(config);
+            var entry = new CronRegistryEntry(typeof(T), cron);
 
-            if (string.IsNullOrWhiteSpace(config.CronExpression))
-                throw new ArgumentNullException(nameof(ScheduleConfig<T>.CronExpression), @"Empty Cron Expression is not allowed.");
+            services.AddHostedService<CronScheduler>();
+            services.TryAddSingleton<T>();
+            services.AddSingleton(entry);
 
-            services.AddSingleton<IScheduleConfig<T>>(config);
-            services.AddHostedService<T>();
+            return services;
         }
     }
 }

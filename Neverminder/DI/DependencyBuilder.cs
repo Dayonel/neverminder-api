@@ -42,7 +42,7 @@ namespace Neverminder.DI
             #endregion
 
             #region Functions
-            services.AddCronJob<PushNotificationScheduler>(c => c.CronExpression = @"* * * * *");
+            services.AddCronJob<PushNotificationScheduler>("* * * * *");
             #endregion
         }
     }

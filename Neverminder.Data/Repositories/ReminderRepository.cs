@@ -24,6 +24,7 @@ namespace Neverminder.Data.Repositories
                 && w.AlertOn <= DateTime.UtcNow)
                 .Skip(pageSize * (page - 1))
                 .Take(pageSize)
+                .OrderBy(o => o.Id)
                 .ToListAsync();
         }
 

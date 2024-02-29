@@ -3,25 +3,22 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Neverminder.Core.Entity;
 using Neverminder.Core.Interfaces.Repositories;
-using Neverminder.Functions.Cron;
 using Neverminder.Functions.Interfaces;
 
 namespace Neverminder.Functions.Schedulers
 {
-    public class PushNotificationScheduler : CronJobService
+    public class PushNotificationScheduler : ICronJob
     {
         private readonly ILogger<PushNotificationScheduler> _logger;
         private readonly IServiceScopeFactory _scopeFactory;
-        public PushNotificationScheduler(IScheduleConfig<PushNotificationScheduler> config,
-            ILogger<PushNotificationScheduler> logger,
+        public PushNotificationScheduler(ILogger<PushNotificationScheduler> logger,
             IServiceScopeFactory scopeFactory)
-            : base(config.CronExpression)
         {
             _logger = logger;
             _scopeFactory = scopeFactory;
         }
 
-        public override async Task ExecuteAsync(CancellationToken cancellationToken)
+        public async Task Run(CancellationToken token = default)
         {
             try
             {

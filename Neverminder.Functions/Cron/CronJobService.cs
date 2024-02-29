@@ -1,62 +1,99 @@
-﻿using Microsoft.Extensions.Hosting;
-using NCrontab;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Neverminder.Functions.Interfaces;
 
 namespace Neverminder.Functions.Cron
 {
-    public abstract class CronJobService : IHostedService, IDisposable
+    public sealed class CronScheduler : BackgroundService
     {
-        private System.Timers.Timer _timer;
-        private readonly CrontabSchedule _expression;
-        protected CronJobService(string cronExpression)
+        private readonly IServiceProvider _serviceProvider;
+        private readonly IReadOnlyCollection<CronRegistryEntry> _cronJobs;
+
+        public CronScheduler(
+            IServiceProvider serviceProvider,
+            IEnumerable<CronRegistryEntry> cronJobs)
         {
-            _expression = CrontabSchedule.Parse(cronExpression);
+            // Use the container
+            _serviceProvider = serviceProvider;
+            _cronJobs = cronJobs.ToList();
         }
 
-        public virtual async Task StartAsync(CancellationToken cancellationToken)
+        protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            await ScheduleJob(cancellationToken);
-        }
+            // Create a timer that has a resolution less than 60 seconds
+            // Because cron has a resolution of a minute
+            // So everything under will work
+            using var tickTimer = new PeriodicTimer(TimeSpan.FromSeconds(30));
 
-        protected virtual async Task ScheduleJob(CancellationToken cancellationToken)
-        {
-            var next = _expression.GetNextOccurrence(DateTime.UtcNow);
-            var delay = next - DateTimeOffset.Now;
-
-            if (delay.TotalMilliseconds <= 0)
-                await ScheduleJob(cancellationToken);
-
-            _timer = new System.Timers.Timer(delay.TotalMilliseconds);
-            _timer.Elapsed += async (sender, args) =>
+            // Create a map of the next upcoming entries
+            var runMap = new Dictionary<DateTime, List<Type>>();
+            while (await tickTimer.WaitForNextTickAsync(stoppingToken))
             {
-                _timer.Dispose();
-                _timer = null;
+                // Get UTC Now with minute resolution (remove microseconds and seconds)
+                var now = UtcNowMinutePrecision();
 
-                if (!cancellationToken.IsCancellationRequested)
-                {
-                    await ExecuteAsync(cancellationToken);
-                }
+                // Run jobs that are in the map
+                RunActiveJobs(runMap, now, stoppingToken);
 
-                if (!cancellationToken.IsCancellationRequested)
-                {
-                    await ScheduleJob(cancellationToken);
-                }
-            };
-
-            _timer.Start();
-            await Task.CompletedTask;
+                // Get the next run for the upcoming tick
+                runMap = GetJobRuns();
+            }
         }
 
-        public abstract Task ExecuteAsync(CancellationToken cancellationToken);
-
-        public virtual async Task StopAsync(CancellationToken cancellationToken)
+        private void RunActiveJobs(IReadOnlyDictionary<DateTime, List<Type>> runMap, DateTime now, CancellationToken stoppingToken)
         {
-            _timer?.Stop();
-            await Task.CompletedTask;
+            if (!runMap.TryGetValue(now, out var currentRuns))
+            {
+                return;
+            }
+
+            foreach (var run in currentRuns)
+            {
+                // We are sure (thanks to our extension method)
+                // that the service is of type ICronJob
+                var job = (ICronJob)_serviceProvider.GetRequiredService(run);
+
+                // We don't want to await jobs explicitly because that
+                // could interfere with other job runs
+                job.Run(stoppingToken);
+            }
         }
 
-        public virtual void Dispose()
+        private Dictionary<DateTime, List<Type>> GetJobRuns()
         {
-            _timer?.Dispose();
+            var runMap = new Dictionary<DateTime, List<Type>>();
+            foreach (var cron in _cronJobs)
+            {
+                var utcNow = DateTime.UtcNow;
+                var runDates = cron.CrontabSchedule.GetNextOccurrences(utcNow, utcNow.AddMinutes(1));
+                if (runDates is not null)
+                {
+                    AddJobRuns(runMap, runDates, cron);
+                }
+            }
+
+            return runMap;
+        }
+
+        private static void AddJobRuns(IDictionary<DateTime, List<Type>> runMap, IEnumerable<DateTime> runDates, CronRegistryEntry cron)
+        {
+            foreach (var runDate in runDates)
+            {
+                if (runMap.TryGetValue(runDate, out var value))
+                {
+                    value.Add(cron.Type);
+                }
+                else
+                {
+                    runMap[runDate] = new List<Type> { cron.Type };
+                }
+            }
+        }
+
+        private static DateTime UtcNowMinutePrecision()
+        {
+            var now = DateTime.UtcNow;
+            return new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute, 0);
         }
     }
 }
