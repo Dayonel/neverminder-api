@@ -32,5 +32,23 @@ namespace Neverminder.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
+
+#if DEBUG
+        [HttpPost, Route("send")]
+        public async Task<IActionResult> Send([FromHeader(Name = "x-push-token")][Required] string pushToken)
+        {
+            try
+            {
+                return await _platformService.Send(pushToken)
+                    ? Ok()
+                    : BadRequest();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogCritical(ex.ToString());
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
+#endif
     }
 }

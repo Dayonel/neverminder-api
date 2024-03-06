@@ -3,5 +3,6 @@
     public interface IFirebaseServiceClient
     {
         Task<bool> IsValid(string pushToken);
+        Task<bool> Send(string pushToken);
     }
 }

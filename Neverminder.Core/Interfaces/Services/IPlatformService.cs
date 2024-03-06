@@ -3,5 +3,6 @@
     public interface IPlatformService
     {
         Task<bool> Post(string pushToken);
+        Task<bool> Send(string pushToken);
     }
 }

@@ -14,5 +14,21 @@ namespace Neverminder.Infrastructure.Firebase
             }
             catch { return false; }
         }
+
+        public async Task<bool> Send(string pushToken)
+        {
+            try
+            {
+                var notification = new Notification
+                {
+                    Title = "Lorem Ipsum",
+                    Body = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur"
+                };
+
+                await FirebaseMessaging.DefaultInstance.SendAsync(new Message { Notification = notification, Token = pushToken });
+                return true;
+            }
+            catch { return false; }
+        }
     }
 }

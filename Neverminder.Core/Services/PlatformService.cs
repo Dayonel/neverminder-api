@@ -29,5 +29,10 @@ namespace Neverminder.Core.Services
                 PushToken = pushToken,
             }) > 0;
         }
+
+        public async Task<bool> Send(string pushToken)
+        {
+            return await _firebaseServiceClient.Send(pushToken);
+        }
     }
 }
