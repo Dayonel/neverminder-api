@@ -48,7 +48,8 @@ namespace Neverminder.Functions.Schedulers
                                 Title = f.Title,
                                 Body = f.Description,
                                 ImageUrl = "https://github-production-user-asset-6210df.s3.amazonaws.com/10290812/304105150-b64fdd09-5297-4cf5-bb68-3d7249a9c147.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAVCODYLSA53PQK4ZA%2F20240224%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20240224T021342Z&X-Amz-Expires=300&X-Amz-Signature=234223cfc30ea28775d42ecce0d2ce3507c163086cb58a247897aa67201a1e95&X-Amz-SignedHeaders=host&actor_id=10290812&key_id=0&repo_id=755372213"
-                            }
+                            },
+                            Android = new AndroidConfig { Notification = new AndroidNotification { ChannelId = "Neverminder" } }
                         });
                     });
 
