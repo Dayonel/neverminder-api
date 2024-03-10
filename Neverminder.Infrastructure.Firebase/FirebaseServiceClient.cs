@@ -1,5 +1,6 @@
 ﻿using FirebaseAdmin.Messaging;
 using Neverminder.Core.Interfaces.Infrastructure;
+using Neverminder.Infrastructure.Firebase.Extensions;
 
 namespace Neverminder.Infrastructure.Firebase
 {
@@ -25,7 +26,9 @@ namespace Neverminder.Infrastructure.Firebase
                     Body = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur"
                 };
 
-                await FirebaseMessaging.DefaultInstance.SendAsync(new Message { Android = new AndroidConfig {  Notification = new AndroidNotification { ChannelId = "Neverminder" } }, Notification = notification, Token = pushToken, Data = new Dictionary<string, string> { { "url", "detail" } } });
+                var message = notification.Map(pushToken);
+
+                await FirebaseMessaging.DefaultInstance.SendAsync(message);
                 return true;
             }
             catch { return false; }
