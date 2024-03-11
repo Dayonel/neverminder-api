@@ -11,7 +11,7 @@ namespace Neverminder.Infrastructure.Firebase.Extensions
                 new Message
                 {
                     Apns = new ApnsConfig { Aps = new Aps { Sound = "default" } },
-                    Android = new AndroidConfig { Notification = new AndroidNotification { ChannelId = "Neverminder", Sound = "default" } },
+                    Android = new AndroidConfig { Priority = Priority.High, Notification = new AndroidNotification { ChannelId = "Neverminder", Sound = "default", Priority = NotificationPriority.MAX } },
                     Notification = notification,
                     Token = pushToken,
                     Data = new Dictionary<string, string> { { "url", "detail" } },
