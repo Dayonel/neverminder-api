@@ -4,7 +4,9 @@ namespace Neverminder.Infrastructure.Firebase.Extensions
 {
     public static class MessageExtensions
     {
-        public static Message Map(this Notification notification, string pushToken) 
+        public static Message Map(this Notification notification, 
+            string pushToken,
+            int id) 
         {
             return notification != null
                 ?
@@ -14,7 +16,7 @@ namespace Neverminder.Infrastructure.Firebase.Extensions
                     Android = new AndroidConfig { Priority = Priority.High, Notification = new AndroidNotification { ChannelId = "Neverminder", Sound = "default", Priority = NotificationPriority.MAX } },
                     Notification = notification,
                     Token = pushToken,
-                    Data = new Dictionary<string, string> { { "url", "detail" } },
+                    Data = new Dictionary<string, string> { { "id", id.ToString() } },
                 }
                 : null;
         }

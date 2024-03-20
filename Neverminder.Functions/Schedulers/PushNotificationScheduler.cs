@@ -42,7 +42,7 @@ namespace Neverminder.Functions.Schedulers
                     reminders.ForEach(f =>
                     {
                         var notification = new Notification { Title = f.Title, Body = f.Description };
-                        var message = notification.Map(f.Platform.PushToken);
+                        var message = notification.Map(f.Platform.PushToken, f.Id);
                         messages.Add(message);
                     });
 
